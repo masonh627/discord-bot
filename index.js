@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const token = 'NzQxNzM5MDE1MTE5NzAwMDcx.Xy78Sg.zXyCTT5B0YXaPtMDPOTFuwbVfIw';
+const token = 'YOUR TOKEN HERE';
 
-var prefix = ';';
+var prefix = ';'; //change this if you want a custom prefix
 
 String; streamers = new Array("");
 
