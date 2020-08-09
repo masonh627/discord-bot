@@ -1,0 +1,14 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.1",
+  "description": "A passion Project bot made by masonh627#420",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Masonh627#0420",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0"
+  }
+}
