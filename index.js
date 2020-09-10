@@ -4,6 +4,8 @@ const {Client, Attachment, MessageEmbed} = require('discord.js');
 
 const token = 'YOUR TOKEN';
 
+const ver = '2.0.0!'
+
 var prefix = ';';
 
 streamersname = [];
@@ -11,75 +13,184 @@ streamersurl = [];
 
 client.on('ready', () => {
     console.log('This bot is online!')
+    client.user.setActivity(";help")
 })
 
 client.on('message', msg=>{
 
     let args = msg.content.substring(prefix.length).split(" ");
-    
+    var embed = new Discord.MessageEmbed()
+
     if(msg.content.startsWith(prefix)){
         switch(args[0]){
             case 'adds':
-                if(streamersurl.indexOf(args[2]) == -1 && args[1] != 'undefined' && args[2] != 'undefined'){
-                    streamersname.add(args[1])
-                    streamersurl.add(args[2])
-                    msg.channel.send("streamer sucsessfully added!")
+                console.log[0]
+                console.log[1]
+                console.log[2]
+                if(streamersurl.indexOf(args[2]) == -1 && args.length == 3){
+                    streamersname.push(args[1])
+                    streamersurl.push(args[2])
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle("streamer sucsessfully added!")
+                    .setFooter("do " + prefix + "streamers for a list of streamers")
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
                 }else{
-                    msg.channel.send("An error has accoured do " + prefix + "addshelp if you need help using this command")
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle("Error")
+                    .addFields(
+                        {name:"An error has occurred", value:"do " + prefix + "addshelp to get help with this command"}
+                    )
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
+                    return;
                 }
             break;
             case 'streamers':
                 if(streamersurl.length == 0){
-                    msg.channel.send("Please add some streamers first!")
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle("Please add some streamers first!")
+                    .setFooter("do " + prefix + "addshelp for more help")
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
                     return;
                 }
-                message = 'The currently added streamers are\n\n';
+                message = '';
                 for(x = 0; x < streamersname.length; x++){
-                    message += streamersname[x] + "\n"
+                    message += x + ". " + streamersname[x] + "\n"
                 }
-                msg.channel.send(message + "\nto get all the urls of the streamers do " + prefix + "streamersurl to get a dm with a list of them");
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("The currently added streamers are\n")
+                .addFields(
+                    {name:"Streamers", value:message, inline:true}
+                )
+                .setFooter("to get all the urls of the streamers do " + prefix + "streamersurl to get a dm with a list of them\n")
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                msg.channel.send(embed);
             break;
             case 'streamersurl':
                 if(streamersurl.length == 0){
-                    msg.channel.send("Please add some streamers first!")
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle("Please add some streamers first!")
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
                     return;
                 }
-                message = 'The curently added streamer urls are\n\n'
+                message = ''
                 for(x = 0; x <streamersurl.length; x++){
-                    message += streamersurl[x] + "\n"
+                    message += x + ". " + streamersurl[x] + "\n"
                 }
-                msg.author.send(message)
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("The currently added streamer urls are")
+                .addFields(
+                    {name:"Streamers", value:message, inline:true}
+                )
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                msg.author.send(embed)
+            break;
             case 'prefix':
                 if(args.length == 2){
                     if(args[1].length > 2){
-                        msg.channel.send("Prefix to long!")
+                        var embed = new Discord.MessageEmbed()
+                        .setColor('#8e44ad')
+                        .setTitle("Prefix to long!")
+                        .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                        msg.channel.send(embed)
                         return;
                     }
                     prefix = args[1];
-                    msg.channel.send('The Prefix was set to ' + prefix);
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle('The Prefix was set to ' + prefix)
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed);
                 }else if(args.length == 1){
-                    msg.channel.send("the prefix is" + prefix)
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle("the prefix is" + prefix)
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
                 }else{
-                    msg.channel.send("unknown use of command prefix")
+                    var embed = new Discord.MessageEmbed()
+                    .setColor('#8e44ad')
+                    .setTitle("unknown use of command prefix")
+                    .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
                 }
             break;
-            case 'cmds':
-                msg.channel.send("Current added commands \n" + prefix + "adds\n" + "this command goes into a lot of depth for more help with it do " + prefix + "addshelp\n\n" + prefix + "prefix + [anything] \n" + "  This command will change the prefix on the server \n\n" + prefix + "RPS \n" + "  This command will return rather rock,paper or scissors");
+            case 'addshelp':
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("Adds commands")
+                .addFields(
+                    {name:"How to use adds:", value:prefix + "adds <streamername> <linktostreamer>"},
+                    {name:"How to use streamers", value:prefix + "should return a list of all added streamers"},
+                    {name:"How to use streamersurl", value:prefix + "should dm a list of all added streamer urls"}
+                )
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                msg.reply(embed);
             break;
             case 'help':
-                msg.channel.send("Current added commands \n" + prefix + "adds\n" + "this command goes into a lot of depth for more help with it do " + prefix + "addshelp\n\n" + prefix + "prefix + [anything] \n" + "  This command will change the prefix on the server \n\n" + prefix + "RPS \n" + "  This command will return rather rock,paper or scissors");
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("Commands")
+                .addFields(
+                    {name:prefix + "adds", value:"This command goes into alot more depth do " + prefix + "addshelp to get more info"},
+                    {name:prefix + "prefix + [anything]", value:"this command will set the server prefix to what you say (the prefix can not be longer than 2 letter"},
+                    {name:prefix + "bug", value:"This will give you the link to the form where you can report bugs/request features"},
+                    {name:prefix + "source", value:"This will give you the link to the source code (the code will not always be up to date)"},
+                )
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                msg.channel.send(embed);
+                return;            
             break;
-            case 'rps':
-                x = Math.random()
-                if(x<= 0.33){
-                    msg.reply("Rock");
-                }if (x<= 0.66 && x>= 0.34){
-                    msg.reply("Scissors")
-                } else {
-                    msg.reply("Papper")
-                }
+            case 'dev':
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("This is just for the dev if you find this")
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                .addFields(
+                    {name:"Version", value:ver},
+                    {name:"uptime", value:client.uptime/1000}
+                )
+                msg.channel.send(embed);
+            break;
+            case 'bug':
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("Bug report form")
+                .setDescription("The form for reporting bugs is in the title")
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                .setURL("https://forms.gle/Wm3UWzhBMXGcMTVA7")
+                msg.channel.send(embed);
+            break;
+            case 'source':
+                var embed = new Discord.MessageEmbed()
+                .setColor('#8e44ad')
+                .setTitle("Bot source code")
+                .setDescription("Source code for the bot")
+                .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                .setURL("https://github.com/masonh627/discord-bot")
+                msg.channel.send(embed);
             break;
         }
+    }
+    if(msg.content.startsWith(';') && args[0] == 'elp'){
+        var embed = new Discord.MessageEmbed()
+        .setColor('#8e44ad')
+        .setTitle("Commands")
+        .addFields(
+            {name:prefix + "adds", value:"This command goes into alot more depth do " + prefix + "addshelp to get more info"},
+            {name:prefix + "prefix + [anything]", value:"this command will set the server prefix to what you say (the prefix can not be longer than 2 letter"},
+        )
+        .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+        msg.channel.send(embed);            
     }
 })
 
