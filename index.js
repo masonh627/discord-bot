@@ -188,9 +188,11 @@ client.on('message', msg=>{
         .addFields(
             {name:prefix + "adds", value:"This command goes into alot more depth do " + prefix + "addshelp to get more info"},
             {name:prefix + "prefix + [anything]", value:"this command will set the server prefix to what you say (the prefix can not be longer than 2 letter"},
+            {name:prefix + "bug", value:"This will give you the link to the form where you can report bugs/request features"},
+            {name:prefix + "source", value:"This will give you the link to the source code (the code will not always be up to date)"},
         )
         .setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
-        msg.channel.send(embed);            
+        msg.channel.send(embed);           
     }
 })
 
