@@ -25,7 +25,7 @@ client.on('message', msg=>{
         switch(args[0]){
             case 'adds':
                 if(streamersurl.indexOf(args[2]) == -1 && typeof(args[1]) !== 'undefined' && typeof(args[2]) !== 'undefined'){
-                    if(args[2].includes('.com')){
+                    if(args[2].includes('.com') && args[2].includes('https://'){
                         streamersname.push(args[1])
                         streamersurl.push(args[2])
                         embed.setColor('#8e44ad')
