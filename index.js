@@ -4,7 +4,7 @@ const {Client, Attachment, MessageEmbed} = require('discord.js');
 
 const token = 'YOUR TOKEN';
 
-const ver = '2.0.0!'
+const ver = '2.1.1!'
 
 var prefix = ';';
 
@@ -22,12 +22,13 @@ client.on('message', msg=>{
 
     if(msg.content.startsWith(prefix)){
         var embed = new Discord.MessageEmbed()
-        switch(args[0]){
+        switch(args[0].toLowerCase()){
             case 'adds':
-                if(streamersurl.indexOf(args[2]) == -1 && typeof(args[1]) !== 'undefined' && typeof(args[2]) !== 'undefined'){
-                    if(args[2].includes('https://www.twitch.tv/')){
-                        streamersname.push(args[1])
-                        streamersurl.push(args[2])
+                if(streamersurl.indexOf(args[1]) == -1 && typeof(args[1]) !== 'undefined'){
+                    if(args[1].includes('https://www.twitch.tv/')){
+                        let stuff =  args[1].substring(0).split("/")
+                        streamersname.push(stuff[stuff.indexOf('www.twitch.tv') + 1])
+                        streamersurl.push(args[1].toLowerCase())
                         embed.setColor('#8e44ad')
                         embed.setTitle("streamer sucsessfully added!")
                         embed.setDescription("do " + prefix + "streamers for a list of streamers")
@@ -35,7 +36,7 @@ client.on('message', msg=>{
                         msg.channel.send(embed)
                     }else{
                         embed.setTitle("Error")
-                        embed.setDescription("invalid URL")
+                        embed.setDescription("invalid Twitch URL")
                         embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
                         embed.setColor('#8e44ad')
                         msg.channel.send(embed)
@@ -55,43 +56,21 @@ client.on('message', msg=>{
                 if(streamersurl.length == 0){
                     embed.setColor('#8e44ad')
                     embed.setTitle("Please add some streamers first!")
-                    embed.setFooter("do " + prefix + "addshelp for more help")
+                    embed.setDescription("do " + prefix + "addshelp for more help")
                     embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
                     msg.channel.send(embed)
                     return;
                 }
                 message = '';
                 for(x = 0; x < streamersname.length; x++){
-                    message += x + ". " + streamersname[x] + "\n"
+                    embed.addFields(
+                        {name:streamersname[x], value:streamersurl[x]}
+                    )
                 }
                 embed.setColor('#8e44ad')
                 embed.setTitle("The currently added streamers are\n")
-                embed.addFields(
-                    {name:"Streamers", value:message, inline:true}
-                )
-                embed.setFooter("to get all the urls of the streamers do " + prefix + "streamersurl to get a dm with a list of them\n")
                 embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
                 msg.channel.send(embed);
-            break;
-            case 'streamersurl':
-                if(streamersurl.length == 0){
-                    embed.setColor('#8e44ad')
-                    embed.setTitle("Please add some streamers first!")
-                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
-                    msg.channel.send(embed)
-                    return;
-                }
-                message = ''
-                for(x = 0; x <streamersurl.length; x++){
-                    message += x + ". " + streamersurl[x] + "\n"
-                }
-                embed.setColor('#8e44ad')
-                embed.setTitle("The currently added streamer urls are")
-                embed.addFields(
-                    {name:"Streamers", value:message, inline:true}
-                )
-              embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
-                msg.author.send(embed)
             break;
             case 'prefix':
                 if(args.length == 2){
@@ -123,12 +102,47 @@ client.on('message', msg=>{
                 embed.setColor('#8e44ad')
                 embed.setTitle("Adds commands")
                 embed.addFields(
-                    {name:"How to use adds:", value:prefix + "adds <streamername> <linktostreamer>"},
-                    {name:"How to use streamers", value:prefix + "should return a list of all added streamers"},
-                    {name:"How to use streamersurl", value:prefix + "should dm a list of all added streamer urls"}
+                    {name:"How to use " + prefix + "adds:", value:prefix + "adds <linktostreamer>"},
+                    {name:"How to use " + prefix + "streamers", value:prefix + "should return a list of all added streamers"},
+                    {name:"How to use " + prefix + "delstreamer", value:prefix + "delstreamer <streamername> if you do this command you should be able to delete the streamer from your list"},
+                    {name:"How to use " + prefix + "renamestreamer", value:prefix + "renamestreamer <current streamer name> <new streamer name> should rename the streamer in the list"}
                 )
                 embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
                 msg.reply(embed);
+            break;
+            case 'renamestreamer':
+                if(args.length == 3){
+                    streamersname[streamersname.indexOf(args[1])] = args[2]
+                    embed.setColor('#8e44ad')
+                    embed.setTitle("Streamer successfully renamed!")
+                    embed.setDescription("do " + prefix + "streamers for a list of streamers")
+                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
+                }else{
+                    embed.setColor('#8e44ad')
+                    embed.setTitle("Error")
+                    embed.setDescription("do " + prefix + "addshelp for help with this command")
+                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
+                }
+            break;
+            case 'delstreamer':
+                if(streamersname.indexOf(args[1].toLowerCase()) != -1){
+                    streamersurl.splice(streamersname.indexOf(args[1].toLowerCase()),1)
+                    streamersname.splice(streamersname.indexOf(args[1].toLowerCase()),1)
+                    embed.setColor('#8e44ad')
+                    embed.setTitle("Streamer successfully removed!")
+                    embed.setDescription("do " + prefix + "streamers for a list of streamers")
+                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
+                }else{
+                    embed.setColor('#8e44ad')
+                    embed.setTitle("Streamer does not exsist!")
+                    embed.setDescription("do " + prefix + "streamers for a list of streamers")
+                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    embed.setFooter("do " + prefix + "addshelp for help with this command")
+                    msg.channel.send(embed)
+                }
             break;
             case 'help':
                 embed.setColor('#8e44ad')
