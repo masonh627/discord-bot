@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const {Client, Attachment, MessageEmbed} = require('discord.js');
 
-const token = 'YOUR TOKEN';
+const token = 'NzQxNzM5MDE1MTE5NzAwMDcx.Xy78Sg.zXyCTT5B0YXaPtMDPOTFuwbVfIw';
 
 const ver = '2.1.1!'
 
@@ -152,6 +152,7 @@ client.on('message', msg=>{
                     {name:prefix + "prefix + [anything]", value:"this command will set the server prefix to what you say (the prefix can not be longer than 2 letter"},
                     {name:prefix + "bug", value:"This will give you the link to the form where you can report bugs/request features"},
                     {name:prefix + "source", value:"This will give you the link to the source code (the code will not always be up to date)"},
+                    {name:prefix + "request", value:"This will pring you to the feature request form"}
                 )
                 embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
                 msg.channel.send(embed);
@@ -173,6 +174,14 @@ client.on('message', msg=>{
                 embed.setDescription("The form for reporting bugs is in the title")
                 embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
                 embed.setURL("https://forms.gle/Wm3UWzhBMXGcMTVA7")
+                msg.channel.send(embed);
+            break;
+            case 'request':
+                embed.setColor('#8e44ad')
+                embed.setTitle("Feature request form")
+                embed.setDescription("The form for requesting features in the the title")
+                embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                embed.setURL("https://forms.gle/paz3kZsuBRViWnq28")
                 msg.channel.send(embed);
             break;
             case 'source':
