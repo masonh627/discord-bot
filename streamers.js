@@ -1,0 +1,2 @@
+streamersname = [];
+streamersurl = [];
