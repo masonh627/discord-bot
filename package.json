@@ -1,6 +1,6 @@
 {
   "name": "discord-bot",
-  "version": "1.0.1",
+  "version": "2.2.4",
   "description": "A passion Project bot made by masonh627#420",
   "main": "index.js",
   "scripts": {
