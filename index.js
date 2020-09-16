@@ -1,13 +1,26 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const {Client, Attachment, MessageEmbed} = require('discord.js');
+const YouTube = require("discord-youtube-api");
+const youtube = new YouTube("YOUR GOOGLE API KEY");
+const fs = require("fs")
 
 const token = 'YOUR TOKEN';
 
-const ver = '2.1.1!'
+const ver = '2.2.4!'
 
 var prefix = ';';
 
+holder = [];
+fs.readFile("streamers.txt", "utf8", function(err, data){
+    if (err) throw err;
+    holder = data.substring(0).split(",")
+    console.log(holder)
+    for(x=0; x<holder.length-1;x+=2){
+        streamersname.push(holder[x])
+        streamersurl.push(holder[x+1])
+    }
+})
 streamersname = [];
 streamersurl = [];
 
@@ -29,6 +42,10 @@ client.on('message', msg=>{
                         let stuff =  args[1].substring(0).split("/")
                         streamersname.push(stuff[stuff.indexOf('www.twitch.tv') + 1])
                         streamersurl.push(args[1].toLowerCase())
+                        fs.appendFile("streamers.txt", stuff[stuff.indexOf('www.twitch.tv') + 1] + "," + args[1].toLowerCase() + ", ", function(err){
+                            if (err) throw err;
+                            console.log('added ' + stuff[stuff.indexOf('www.twitch.tv') + 1] + " to the database");
+                        })
                         embed.setColor('#8e44ad')
                         embed.setTitle("streamer sucsessfully added!")
                         embed.setDescription("do " + prefix + "streamers for a list of streamers")
@@ -192,6 +209,7 @@ client.on('message', msg=>{
                 embed.setURL("https://github.com/masonh627/discord-bot")
                 msg.channel.send(embed);
             break;
+
         }
     }
     if(msg.content.startsWith(';') && args[0] == 'elp'){
