@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const {Client, Attachment, MessageEmbed} = require('discord.js');
-const YouTube = require("discord-youtube-api");
-const youtube = new YouTube("YOUR GOOGLE API KEY");
 const fs = require("fs")
 
 const token = 'YOUR TOKEN';
