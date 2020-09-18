@@ -6,7 +6,7 @@ const fs = require("fs");
 const token = 'YOUR TOKEN';
 
 
-const ver = '2.5.0!'
+const ver = '2.5.4!'
 
 var prefix = ';';
 
@@ -19,7 +19,7 @@ client.on('ready', () => {
     client.user.setActivity(";help")
     guildnums = client.guilds.cache.size
     fs.appendFile('Youtubers&Streamers', '', function(err, data){
-        
+
     })
 })
 
@@ -31,78 +31,53 @@ client.on('message', msg=>{
         var embed = new Discord.MessageEmbed()
         switch(args[0].toLowerCase()){
             case 'add':
-                if(urls.indexOf(args[1]) == -1 && typeof(args[1]) !== 'undefined'){
-                    if(args[1].includes('https://www.twitch.tv/') || args[1].includes('https://www.youtube.com/')){
-                        if(args[1].includes('https://www.twitch.tv/')){
-                            //add new streamer to list
-                            let stuff =  args[1].substring(0).split("/")
-                            names.push(stuff[stuff.indexOf('www.twitch.tv') + 1])
-                            urls.push(args[1].toLowerCase())
-                            //write new streamer to file
-                            fs.appendFile("Youtubers&Streamers/" + msg.guild.name.toLowerCase().replace(/ /g, '') + "streamers.txt", stuff[stuff.indexOf('www.twitch.tv') + 1] + "," + args[1].toLowerCase() + ",", function(err){
-                                if (err) throw(err);
-                                console.log('added ' + stuff[stuff.indexOf('www.twitch.tv') + 1] + " to the database of " + msg.guild.name.toLowerCase().replace(/ /g, ''));
-                            })
-                            //send message confirming streamer added
-                            embed.setColor('#8e44ad')
-                            embed.setTitle("streamer sucsessfully added!")
-                            embed.setDescription("do " + prefix + "streamers for a list of streamers")
+                //check if urls are correct
+                if(args[1].toLowerCase().includes('https://www.twitch.tv/') || args[1].toLowerCase().includes('https://www.youtube.com/')){
+                    //see if its a twitch link or youtube link
+                    if(args[1].toLowerCase().includes('https://www.twitch.tv/')){
+                        //break down the link to the stuff we need
+                        stuff = args[1].split('/')
+                        //add streamer to database
+                        fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'streamers.txt', stuff[stuff.indexOf('www.twitch.tv') + 1] + ',' + args[1].toLowerCase() + ',', function(err,data){
+                            if(err)throw(err);
+                            embed.setTitle("Streamer successfully added!")
+                            embed.setDescription("do " + prefix + "streamers for a list of all streamers")
                             embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
-                            msg.channel.send(embed)
-                        }else{
-                            if(typeof(args[2]) !== 'undefined' && urls.indexOf(args[1]) == -1){
-                                //add new youtuber to list
-                                let stuff =  args[1].substring(0).split("/")
-                                names.push(stuff[stuff.indexOf('www.youtube.com') + 1])
-                                urls.push(args[1].toLowerCase())
-                                //add new youtuber to file
-                                fs.appendFile("Youtubers&Streamers/" + msg.guild.name.toLowerCase().replace(/ /g, '') + "youtubers.txt", args[2] + "," + args[1].toLowerCase() + ",", function(err){
-                                    if(err) throw (err)
-                                    console.log('added ' + args[2] + " to the database of " + msg.guild.name.toLowerCase().replace(/ /g, ''));
-                                })
-                                //send message about youtuber being added
-                                embed.setColor('#FF0000')
-                                embed.setTitle("youtuber sucsessfully added!")
-                                embed.setDescription("do " + prefix + "youtubers for a list of youtubers")
-                                embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
-                                msg.channel.send(embed)
-                            }else{
-                                //error handle if no name for youtuber put in or youtuber exsist
-                                if(typeof(args[2]) !== 'undefined'){
-                                    embed.setColor('#FF0000')
-                                    embed.setTitle("Error")
-                                    embed.setDescription("You need to set a name for the youtuber!")
-                                    embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
-                                    msg.channel.send(embed)
-                                }else{
-                                    embed.setColor('#FF0000')
-                                    embed.setTitle("Error")
-                                    embed.setDescription("Youtuber already added!")
-                                    embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
-                                    msg.channel.send(embed)
-                                }
-                            }
-                        }
+                            embed.setColor('#8e44ad')
+                            msg.channel.send(embed)  
+                        })
                     }else{
-                        //error in urls
-                        embed.setTitle("Error")
-                        embed.setDescription("invalid URL")
-                        embed.addFields(
-                            {name:"An error has occurred", value:"do " + prefix + "addhelp to get help with this command"}
-                        )
-                        embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
-                        embed.setColor('#8e44ad')
-                        msg.channel.send(embed)
+                        //see if youtuber was givin a name
+                        if(typeof(args[2]) !== 'undefined'){
+                            //add youtuber to database
+                            fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'youtubers.txt'(), args[2].toLowerCase() + ',' + args[1].toLowerCase() + ',', function(err, data){
+                                if(err)throw(err);
+                                //tell user that youtuber was added
+                                embed.setTitle("Youtuber successfully added!")
+                                embed.setDescription("do " + prefix + "youtubers for a list of all youtubers")
+                                embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                                embed.setColor('#FF0000')
+                                msg.channel.send(embed)  
+                            })
+                        }else{
+                            //tell user that youtuber wasn't givin a name
+                            embed.setTitle("Please give the youtuber a name!")
+                            embed.setDescription("do " + prefix + "addhelp for more help with command")
+                            embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                            embed.setColor('#FF0000')
+                            msg.channel.send(embed)  
+                        }
                     }
                 }else{
-                    embed.setColor('#8e44ad')
+                    //error in urls
                     embed.setTitle("Error")
+                    embed.setDescription("invalid URL")
                     embed.addFields(
                         {name:"An error has occurred", value:"do " + prefix + "addhelp to get help with this command"}
                     )
                     embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    embed.setColor('#8e44ad')
                     msg.channel.send(embed)
-                    return;
                 }
             break;
             case 'streamers':
@@ -266,8 +241,8 @@ client.on('message', msg=>{
                     };
                     holder = data.split(",")
                     for(x=0;x<holder.length;x+=2){
-                        names.push(holder[x])
-                        urls.push(holder[x+1])
+                        names.push(String(holder[x]).replace(/ /g, ''))
+                        urls.push(String(holder[x+1]).replace(/ /g, ''))
                     }
                     //check if streamer exsist in the file
                     if(names.indexOf(args[1].toLowerCase()) == -1){
@@ -328,6 +303,126 @@ client.on('message', msg=>{
                     embed.setTitle("The currently added youtubers are")
                     embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
                     msg.channel.send(embed);
+                })
+            break;
+            case 'delyoutuber':
+                //check if command was called right
+                if(typeof(args[1]) == 'undefined'){
+                    //tell user that command was called wrong
+                    embed.setColor('#FF0000')
+                    embed.setTitle("Error")
+                    embed.setDescription("do " + prefix + "addhelp for help with this command")
+                    embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                    msg.channel.send(embed)
+                    return;
+                }
+                //place holder lists
+                names = [];
+                urls = [];
+                //read data from file
+                fs.readFile("Youtubers&Streamers/" + msg.guild.name.toLowerCase().replace(/ /g, '') + "youtubers.txt", 'utf8', function(err, data){
+                    if(err){
+                        //error handler
+                        embed.setColor('#FF0000')
+                        embed.setTitle("No youtubers added")
+                        embed.setDescription("do " + prefix + "addhelp for help with this command")
+                        embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                        msg.channel.send(embed)
+                        return;
+                    };
+                    holder = data.split(",")
+                    for(x=0;x<holder.length;x+=2){
+                        names.push(String(holder[x]).replace(/ /g, ''))
+                        urls.push(String(holder[x+1]).replace(/ /g, ''))
+                    }
+                    //check if streamer exsist in the file
+                    if(names.indexOf(args[1].toLowerCase()) == -1){
+                        embed.setColor('#FF0000')
+                        embed.setTitle("Error")
+                        embed.setDescription("Youtuber is not in database! try adding them to it!")
+                        embed.setFooter("do " + prefix + "addhelp for help with this command")
+                        embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                        msg.channel.send(embed)
+                        return;
+                    }
+                    names.splice(names.indexOf(args[1].toLowerCase()), 1)
+                    //make new content for file
+                    content = ''
+                    for(x=0;x<names.length-1;x++){
+                        content += names[x] + ',' + urls[x] + ', '
+                    }
+                    //write new content to file
+                    fs.writeFile("Youtubers&Streamers/" + msg.guild.name.toLowerCase().replace(/ /g, '') + "youtubers.txt", content, function(err, data){
+                        if(err) throw(err);
+                        console.log("deleted " + args[1].toLowerCase() + " in the " + msg.guild.name.toLowerCase().replace(/ /g, '') + " database")
+                        embed.setColor('#FF0000')
+                        embed.setTitle("Youtuber successfully deleted!")
+                        embed.setDescription("do " + prefix + "youtubers for a list of all youtubers")
+                        embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                        msg.channel.send(embed)
+                    })
+                })
+            break;
+            case 'delstreamer':
+                //check if command was called right
+                if(typeof(args[1]) == 'undefined'){
+                    //tell user that command was called wrong
+                    embed.setColor('#8e44ad')
+                    embed.setTitle("Error")
+                    embed.setDescription("do " + prefix + "addhelp for help with this command")
+                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                    msg.channel.send(embed)
+                    return;
+                }
+                //place holder lists
+                names = [];
+                urls = [];
+                //read data from file
+                fs.readFile("Youtubers&Streamers/" + msg.guild.name.toLowerCase().replace(/ /g, '') + "streamers.txt", 'utf8', function(err, data){
+                    if(err){                        
+                        //error handler
+                        embed.setColor('#8e44ad')
+                        embed.setTitle("No streamers added")
+                        embed.setDescription("do " + prefix + "addhelp for help with this command")
+                        embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                        msg.channel.send(embed)
+                        return;
+                    };
+                    holder = data.split(",")
+                    for(x=0;x<holder.length;x+=2){
+                        names.push(String(holder[x]).replace(/ /g, ''))
+                        urls.push(String(holder[x+1]).replace(/ /g, ''))
+                    }
+                    //check if streamer exsist in the file
+                    if(names.indexOf(args[1].toLowerCase()) == -1){
+                        embed.setColor('#8e44ad')
+                        embed.setTitle("Error")
+                        embed.setDescription("Streamer is not in database! try adding them to it!")
+                        embed.setFooter("do " + prefix + "addhelp for help with this command")
+                        embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                        msg.channel.send(embed)
+                        console.log(names.indexOf(args[1].toLowerCase()))
+                        console.log(names)
+                        return;
+                    }
+                    urls.splice(names.indexOf(args[1].toLowerCase()), 1)
+                    names.splice(names.indexOf(args[1].toLowerCase()), 1)
+
+                    //make new content for file
+                    content = ''
+                    for(x=0;x<names.length-1;x++){
+                        content += names[x] + ',' + urls[x] + ', '
+                    }
+                    //write new content to file
+                    fs.writeFile("Youtubers&Streamers/" + msg.guild.name.toLowerCase().replace(/ /g, '') + "streamers.txt", content, function(err, data){
+                        if(err) throw(err);
+                        console.log("deleted " + args[1].toLowerCase() + " in the " + msg.guild.name.toLowerCase().replace(/ /g, '') + " database")
+                        embed.setColor('#8e44ad')
+                        embed.setTitle("Streamer successfully deleted!")
+                        embed.setDescription("do " + prefix + "streamers for a list of all streamers")
+                        embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                        msg.channel.send(embed)
+                    })
                 })
             break;
             case 'help':
