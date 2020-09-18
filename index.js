@@ -2,11 +2,12 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const {Client, Attachment, MessageEmbed} = require('discord.js');
 const fs = require("fs");
+const { url } = require('inspector');
 
 const token = 'YOUR TOKEN';
 
 
-const ver = '2.5.4!'
+const ver = '2.5.5!'
 
 var prefix = ';';
 
@@ -32,32 +33,99 @@ client.on('message', msg=>{
         switch(args[0].toLowerCase()){
             case 'add':
                 //check if urls are correct
-                if(args[1].toLowerCase().includes('https://www.twitch.tv/') || args[1].toLowerCase().includes('https://www.youtube.com/')){
+                if(args[1].toLowerCase().includes('https://www.twitch.tv/') || args[1].toLowerCase().includes('https://www.youtube.com/channel/') || args[1].toLowerCase().includes('https://www.youtube.com/user/') ){
+                    names = [];
+                    urls = [];
                     //see if its a twitch link or youtube link
                     if(args[1].toLowerCase().includes('https://www.twitch.tv/')){
                         //break down the link to the stuff we need
                         stuff = args[1].split('/')
                         //add streamer to database
-                        fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'streamers.txt', stuff[stuff.indexOf('www.twitch.tv') + 1] + ',' + args[1].toLowerCase() + ',', function(err,data){
-                            if(err)throw(err);
-                            embed.setTitle("Streamer successfully added!")
-                            embed.setDescription("do " + prefix + "streamers for a list of all streamers")
-                            embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
-                            embed.setColor('#8e44ad')
-                            msg.channel.send(embed)  
+                        fs.readFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'streamers.txt', 'utf8', function(err,data){
+                            if(err){
+                                //if theres no server file add file and write data to it
+                                fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'streamers.txt', stuff[stuff.indexOf('www.twitch.tv') + 1]) + ',' + args[1].toLowerCase() + ',', function(err,data){
+                                    console.log(msg.guild.name.toLowerCase().replace(/ /g, '') + 'streamers.txt not found added to database')
+                                    embed.setTitle("Streamer successfully addded!")
+                                    embed.setDescription("do " + prefix + "streamers for a list of all streamers")
+                                    embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                                    embed.setColor('#8e44ad')
+                                    msg.channel.send(embed)  
+                                    console.log(stuff[stuff.indexOf('www.twitch.tv') + 1] + ' added to database of ' + msg.guild.name.toLowerCase().replace(/ /g, ''))
+                                }
+                                return;
+                            }
+                            //sort files data
+                            holder = data.split(',')
+                            for(x=0;x<holder.length-1;x+=2){
+                                names.push(String(holder[x]).replace(/ /g, ''))
+                                urls.push(String(holder[x+1]).replace(/ /g, ''))
+                            }
+                            //check if streamer already added or not
+                            if(urls.indexOf(args[1].toLowerCase()) !== -1){
+                                embed.setTitle("Streamer already addded!")
+                                embed.setDescription("do " + prefix + "streamers for a list of all streamers")
+                                embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                                embed.setColor('#8e44ad')
+                                msg.channel.send(embed)  
+                                return;
+                            }
+                            //add streamer if not already added
+                            fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'streamers.txt', stuff[stuff.indexOf('www.twitch.tv') + 1] + ',' + args[1].toLowerCase() + ',', function(err,data){
+                                if(err) throw(err);
+                                embed.setTitle("Streamer successfully addded!")
+                                embed.setDescription("do " + prefix + "streamers for a list of all streamers")
+                                embed.setThumbnail("https://blog.twitch.tv/assets/uploads/generic-email-header-1.jpg")
+                                embed.setColor('#8e44ad')
+                                msg.channel.send(embed)  
+                                console.log(stuff[stuff.indexOf('www.twitch.tv') + 1] + ' added to database of ' + msg.guild.name.toLowerCase().replace(/ /g, ''))
+                                return;
+                            })
                         })
                     }else{
                         //see if youtuber was givin a name
                         if(typeof(args[2]) !== 'undefined'){
                             //add youtuber to database
-                            fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'youtubers.txt'(), args[2].toLowerCase() + ',' + args[1].toLowerCase() + ',', function(err, data){
-                                if(err)throw(err);
-                                //tell user that youtuber was added
-                                embed.setTitle("Youtuber successfully added!")
-                                embed.setDescription("do " + prefix + "youtubers for a list of all youtubers")
-                                embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
-                                embed.setColor('#FF0000')
-                                msg.channel.send(embed)  
+                            fs.readFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'youtubers.txt', 'utf8', function(err,data){
+                                if(err){
+                                    //if theres no server file add file and write data to it
+                                    fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'youtubers.txt', args[2].toLowerCase() + ',' + args[1].toLowerCase() + ',', function(err,data){
+                                        console.log(msg.guild.name.toLowerCase().replace(/ /g, '') + 'youtubers.txt not found added to database')
+                                        embed.setTitle("Youtuber successfully addded!")
+                                        embed.setDescription("do " + prefix + "youtubers for a list of all youtubers")
+                                        embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                                        embed.setColor('#FF0000')
+                                        msg.channel.send(embed)  
+                                        console.log(args[2].toLowerCase() + ' added to database of ' + msg.guild.name.toLowerCase().replace(/ /g, ''))
+                                    })
+                                    return;
+                                }
+                                //sort files data
+                                holder = data.split(',')
+                                for(x=0;x<holder.length-1;x+=2){
+                                    names.push(String(holder[x]).replace(/ /g, ''))
+                                    urls.push(String(holder[x+1]).replace(/ /g, ''))
+                                }
+                                //check if youtubers already added or not
+                                if(urls.indexOf(args[1].toLowerCase()) !== -1){
+                                    embed.setTitle("Youtuber already addded!")
+                                    embed.setDescription("do " + prefix + "youtubers for a list of all youtubers")
+                                    embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                                    embed.setColor('#FF0000')
+                                    msg.channel.send(embed)  
+                                    return;
+                                }
+                                //add youtuber if not already added
+                                fs.appendFile('Youtubers&Streamers/' + msg.guild.name.toLowerCase().replace(/ /g, '') + 'youtubers.txt', args[2].toLowerCase() + ',' + args[1].toLowerCase() + ',', function(err,data){
+                                    if(err) throw(err);
+                                    embed.setTitle("Youtuber successfully addded!")
+                                    embed.setDescription("do " + prefix + "youtubers for a list of all youtubers")
+                                    embed.setThumbnail("https://turbologo.com/articles/wp-content/uploads/2019/10/youtube-logo-illustration-678x381.jpg.webp")
+                                    embed.setColor('#FF0000')
+                                    msg.channel.send(embed)  
+                                    console.log(args[2].toLowerCase() + ' added to database of ' + msg.guild.name.toLowerCase().replace(/ /g, ''))
+                                    return;
+                                })
                             })
                         }else{
                             //tell user that youtuber wasn't givin a name
@@ -180,7 +248,7 @@ client.on('message', msg=>{
                         return;
                     };
                     holder = data.split(",")
-                    for(x=0;x<holder.length;x+=2){
+                    for(x=0;x<holder.length-1;x+=2){
                         names.push(String(holder[x]).replace(/ /g, ''))
                         urls.push(String(holder[x+1]).replace(/ /g, ''))
                     }
