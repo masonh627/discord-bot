@@ -3,9 +3,8 @@ const client = new Discord.Client();
 const {Client, Attachment, MessageEmbed} = require('discord.js');
 const fs = require("fs");
 const { type } = require('os');
-const { cpuUsage } = require('process');
 
-const token = 'NzQxNzM5MDE1MTE5NzAwMDcx.Xy78Sg.9ZbGzyVl8zSAOS1EgJJQWatU1G0';
+const token = 'YOUR TOKEN';
 
 
 const ver = '2.2.4!'
