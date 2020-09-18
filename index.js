@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const {Client, Attachment, MessageEmbed} = require('discord.js');
 const fs = require("fs");
-const { type } = require('os');
 
 const token = 'YOUR TOKEN';
 
