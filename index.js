@@ -6,7 +6,7 @@ const fs = require("fs");
 const token = 'YOUR TOKEN';
 
 
-const ver = '2.2.4!'
+const ver = '2.5.0!'
 
 var prefix = ';';
 
